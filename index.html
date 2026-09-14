@@ -419,6 +419,8 @@ if(score>bestScore){bestScore=score;bestMatch=state.menuDB[nama];}
 return bestScore>0?bestMatch:null;
 }
 
+
+
 function parseOrder(transcript){
 const teks=transcript.toLowerCase().trim();
 console.log("📝 Transcript:",teks);
@@ -429,29 +431,147 @@ const mejaNum=parseAngka(mejaMatch[1]);
 if(mejaNum)noMeja="M"+String(mejaNum).padStart(2,"0");
 }
 let teksMenu=teks.replace(/meja\s+\w+/i,"").trim();
-const items=teksMenu.split(/,|\bdan\b/).map(s=>s.trim()).filter(s=>s);
-const hasil=[];
-items.forEach(item=>{
-const kata=item.split(/\s+/);
-let qty=1;
-let namaMenu=item;
-if(kata.length>1){
-const angkaAwal=parseAngka(kata[0]);
-if(angkaAwal!==null&&angkaAwal>0){qty=angkaAwal;namaMenu=kata.slice(1).join(" ");}
-else{
-const angkaAkhir=parseAngka(kata[kata.length-1]);
-if(angkaAkhir!==null&&angkaAkhir>0){qty=angkaAkhir;namaMenu=kata.slice(0,-1).join(" ");}
-}
-}
-const menuMatch=cariMenu(namaMenu);
-if(menuMatch){
-hasil.push({id:menuMatch.id,nama:menuMatch.nama,qty:qty,harga:menuMatch.harga,subtotal:qty*menuMatch.harga});
-}else{
-hasil.push({id:null,nama:namaMenu+" (?)",qty:qty,harga:0,subtotal:0,error:true});
-}
-});
+teksMenu=teksMenu.replace(/\s+(sama|terus|lalu|plus|dan)\s+/gi,", ");
+const hasil=parseItemsSmart(teksMenu);
 tampilkanHasil(noMeja,hasil);
 }
+
+/**
+ * Parser pintar: memecah ucapan menjadi item-item.
+ * Mendukung pola:
+ *  - "nasi 1 rendang daging 2"  (tanpa koma)
+ *  - "nasi 1, rendang 2"        (dengan koma)
+ *  - "2 nasi, 3 es teh"         (angka di depan)
+ */
+function parseItemsSmart(teksMenu){
+const hasil=[];
+let sisa=teksMenu;
+const daftarNamaMenu=Object.keys(state.menuDB).sort((a,b)=>b.length-a.length);
+const aliasList=Object.keys(ALIAS_MENU).sort((a,b)=>b.length-a.length);
+const semuaNama=[...daftarNamaMenu,...aliasList].sort((a,b)=>b.length-a.length);
+
+// Fungsi cek apakah sebuah string adalah angka
+const isAngka=(kata)=>{
+  if(!kata)return false;
+  if(angkaMap[kata]!==undefined)return true;
+  return /^\d+$/.test(kata);
+};
+
+// Cari item di dalam string sisa
+function cariSatuItem(str){
+  // Split jadi kata-kata
+  const kata=str.split(/\s+/).filter(k=>k);
+  if(kata.length===0)return null;
+
+  // Coba deteksi 3 pola:
+  // Pola A: [nama_menu] [angka]      → "rendang daging 2"
+  // Pola B: [angka] [nama_menu]      → "2 rendang"
+  // Pola C: [nama_menu] (tanpa angka) → "rendang"
+
+  // === Coba Pola A: dari KIRI, cari nama menu terpanjang, lalu cek apakah kata berikutnya angka
+  for(let i=0;i<kata.length;i++){
+    // Coba cari nama menu mulai dari index i
+    for(let len=Math.min(5,kata.length-i);len>=1;len--){
+      const kandidat=kata.slice(i,i+len).join(" ");
+      const sisaKata=kata.slice(i+len);
+
+      // Cek apakah kandidat match dengan menu
+      const menu=cariMenu(kandidat);
+      if(menu){
+        // Cek apakah kata berikutnya angka
+        if(sisaKata.length>0&&isAngka(sisaKata[0])){
+          const qty=parseAngka(sisaKata[0])||1;
+          return {
+            item:{id:menu.id,nama:menu.nama,qty:qty,harga:menu.harga,subtotal:qty*menu.harga},
+            before:kata.slice(0,i).join(" "),
+            after:sisaKata.slice(1).join(" ")
+          };
+        }
+      }
+    }
+  }
+
+  // === Coba Pola B: dari KIRI, cari ANGKA dulu, lalu nama menu
+  if(isAngka(kata[0])){
+    const qty=parseAngka(kata[0])||1;
+    for(let len=Math.min(5,kata.length-1);len>=1;len--){
+      const kandidat=kata.slice(1,1+len).join(" ");
+      const menu=cariMenu(kandidat);
+      if(menu){
+        return {
+          item:{id:menu.id,nama:menu.nama,qty:qty,harga:menu.harga,subtotal:qty*menu.harga},
+          before:"",
+          after:kata.slice(1+len).join(" ")
+        };
+      }
+    }
+  }
+
+  // === Coba Pola C: nama menu tanpa angka (qty default 1)
+  for(let i=0;i<kata.length;i++){
+    for(let len=Math.min(5,kata.length-i);len>=1;len--){
+      const kandidat=kata.slice(i,i+len).join(" ");
+      const menu=cariMenu(kandidat);
+      if(menu){
+        return {
+          item:{id:menu.id,nama:menu.nama,qty:1,harga:menu.harga,subtotal:menu.harga},
+          before:kata.slice(0,i).join(" "),
+          after:kata.slice(i+len).join(" ")
+        };
+      }
+    }
+  }
+
+  return null;
+}
+
+// Loop sampai string sisa kosong
+let loopCount=0;
+while(sisa.trim() && loopCount<20){
+  loopCount++;
+
+  // Buang koma/spasi di awal
+  sisa=sisa.replace(/^[\s,]+/,"");
+
+  // Cek dulu, mungkin ada segment dipisah koma
+  const idxKoma=sisa.indexOf(",");
+  const segmen=idxKoma>=0?sisa.slice(0,idxKoma).trim():sisa.trim();
+  const nextPart=idxKoma>=0?sisa.slice(idxKoma+1).trim():"";
+
+  if(!segmen){
+    if(nextPart){sisa=nextPart;continue;}
+    break;
+  }
+
+  const found=cariSatuItem(segmen);
+  if(found){
+    // Cek apakah ada sisa kata yang tidak terpakai di dalam segmen
+    const leftover=(found.before+" "+found.after).trim();
+    hasil.push(found.item);
+
+    // Kalau ada sisa di dalam segmen, coba parse lagi sisa itu
+    if(leftover){
+      // Gabungkan sisa dengan nextPart
+      sisa=(leftover+","+nextPart).trim();
+    }else{
+      sisa=nextPart;
+    }
+  }else{
+    // Tidak ada menu yang dikenali di segmen ini
+    // Kalau segmen berisi sesuatu, catat sebagai error
+    if(segmen.trim()&&!/^\d+$/.test(segmen.trim())){
+      hasil.push({id:null,nama:segmen+" (?)",qty:1,harga:0,subtotal:0,error:true});
+    }
+    sisa=nextPart;
+  }
+}
+
+return hasil;
+}
+
+
+
+
 
 function tampilkanHasil(noMeja,items){
 let html="";
