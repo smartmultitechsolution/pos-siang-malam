@@ -59,7 +59,7 @@ function goTo(page){
   if(target)target.classList.add("active");
   state.currentPage=page;
   document.querySelectorAll(".nav-item").forEach(n=>n.classList.toggle("active",n.dataset.page===page));
-  if(page==="home")loadLaporan();
+  if(page==="home")loadLaporanDashboard();
   if(page==="meja")loadMeja();
   if(page==="voice")updateVoiceHeader();
   if(page==="laporan"){
@@ -165,7 +165,7 @@ async function loadMenuDB(){
   }
 }
 
-async function loadLaporan(){
+async function loadLaporanDashboard(){
   const card=document.getElementById("cardLaporan");
   card.innerHTML='<div class="loading"><div class="spinner"></div><br>Memuat...</div>';
   const result=await apiCall("laporanHarian");
@@ -666,7 +666,7 @@ async function prosesBayar(idPesanan,metode,total){
     window._lastStruk = strukResult.struk || "";
 
     if(state.currentPage==="meja")loadMeja();
-    if(state.currentPage==="home")loadLaporan();
+if(state.currentPage==="home")loadLaporanDashboard();
   }else{
     toast("❌ "+result.message,"error");
   }
