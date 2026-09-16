@@ -343,30 +343,93 @@ function parseAngka(teks){
   return isNaN(num)?null:num;
 }
 
-const ALIAS_MENU={"nasi":"nasi putih","rendang":"rendang daging","pop":"ayam pop","ayam goreng":"ayam goreng","dendeng":"dendeng balado","gulai ikan":"gulai ikan tongkol","tongkol":"gulai ikan tongkol","nangka":"sayur nangka","daun singkong":"daun singkong","tahu":"gulai tahu tempe","tempe":"gulai tahu tempe","perkedel":"perkedel","kerupuk":"kerupuk kulit","sambal":"sambal ijo","es teh":"es teh manis","teh manis":"es teh manis","teh talua":"teh talua","es jeruk":"es jeruk","air":"air mineral","aqua":"air mineral","kopi":"kopi hitam","es campur":"es campur"};
+const ALIAS_MENU={
+  "nasi":"nasi putih",
+  "nasi putih":"nasi putih",
+  "rendang":"rendang daging",
+  "rendang daging":"rendang daging",
+  "ayam pop":"ayam pop",
+  "pop":"ayam pop",
+  "ayam goreng":"ayam goreng",
+  "ayam":"ayam goreng",
+  "goreng":"ayam goreng",
+  "dendeng":"dendeng balado",
+  "dendeng balado":"dendeng balado",
+  "gulai ikan":"gulai ikan tongkol",
+  "tongkol":"gulai ikan tongkol",
+  "ikan":"gulai ikan tongkol",
+  "nangka":"sayur nangka",
+  "sayur nangka":"sayur nangka",
+  "daun singkong":"daun singkong",
+  "singkong":"daun singkong",
+  "tahu":"gulai tahu tempe",
+  "tempe":"gulai tahu tempe",
+  "gulai tahu":"gulai tahu tempe",
+  "perkedel":"perkedel",
+  "kerupuk":"kerupuk kulit",
+  "kerupuk kulit":"kerupuk kulit",
+  "sambal":"sambal ijo",
+  "sambal ijo":"sambal ijo",
+  "es teh":"es teh manis",
+  "es teh manis":"es teh manis",
+  "teh manis":"es teh manis",
+  "teh":"es teh manis",
+  "teh talua":"teh talua",
+  "talua":"teh talua",
+  "es jeruk":"es jeruk",
+  "jeruk":"es jeruk",
+  "air":"air mineral",
+  "air mineral":"air mineral",
+  "aqua":"air mineral",
+  "kopi":"kopi hitam",
+  "kopi hitam":"kopi hitam",
+  "es campur":"es campur",
+  "campur":"es campur"
+};
 
 function cariMenu(input){
   input=input.toLowerCase().trim();
+  if(!input) return null;
+  
+  // 1. Cek di database menu langsung (exact match)
   if(state.menuDB[input])return state.menuDB[input];
-  for(const alias in ALIAS_MENU){
-    if(input.includes(alias)){
-      const target=ALIAS_MENU[alias];
-      if(state.menuDB[target])return state.menuDB[target];
-    }
+  
+  // 2. Cek alias (exact match)
+  if(ALIAS_MENU[input]){
+    const target=ALIAS_MENU[input];
+    if(state.menuDB[target])return state.menuDB[target];
   }
+  
+  // 3. Partial match di database menu (substring)
   const menuNames=Object.keys(state.menuDB);
   for(const nama of menuNames){
-    if(nama.includes(input)||input.includes(nama))return state.menuDB[nama];
+    if(nama===input) return state.menuDB[nama];
   }
-  const kataInput=input.split(/\s+/).filter(k=>k.length>2);
-  let bestMatch=null;
-  let bestScore=0;
+  
+  // 4. Kalau input multi-kata, cari menu yang mengandung semua kata
+  const kataInput=input.split(/\s+/).filter(k=>k.length>1);
+  if(kataInput.length>1){
+    let bestMatch=null;
+    let bestScore=0;
+    for(const nama of menuNames){
+      let matchCount=0;
+      kataInput.forEach(kata=>{
+        if(nama.includes(kata)) matchCount++;
+      });
+      if(matchCount===kataInput.length && matchCount>bestScore){
+        bestScore=matchCount;
+        bestMatch=state.menuDB[nama];
+      }
+    }
+    if(bestMatch) return bestMatch;
+  }
+  
+  // 5. Partial substring
   for(const nama of menuNames){
-    let score=0;
-    kataInput.forEach(kata=>{if(nama.includes(kata))score++;});
-    if(score>bestScore){bestScore=score;bestMatch=state.menuDB[nama];}
+    if(nama.includes(input))return state.menuDB[nama];
   }
-  return bestScore>0?bestMatch:null;
+  
+  return null;
 }
 
 function parseOrder(transcript){
@@ -404,6 +467,7 @@ function parseOrder(transcript){
 function parseItemsSmart(teksMenu){
   const hasil=[];
   let sisa=teksMenu.replace(/[,.]/g," ").replace(/\s+/g," ").trim();
+  const kataList = sisa.split(/\s+/).filter(k=>k);
 
   const isAngka=(kata)=>{
     if(!kata)return false;
@@ -411,64 +475,106 @@ function parseItemsSmart(teksMenu){
     return /^\d+$/.test(kata);
   };
 
-  function cariSatuItem(str){
-    const kata=str.split(/\s+/).filter(k=>k);
-    if(kata.length===0)return null;
+  // ==========================================
+  // STRATEGI: Iterasi kata satu per satu
+  // Cari item = kumpulan kata NAMA + 1 angka QTY
+  // Format: [nama...] [angka] [nama...] [angka]
+  // ==========================================
+  let i = 0;
+  while(i < kataList.length){
+    // Skip kalau kata ini angka (bukan awal item)
+    if(isAngka(kataList[i])){
+      // Angka yang tidak menempel ke menu — abaikan
+      i++;
+      continue;
+    }
 
-    for(let i=0;i<kata.length;i++){
-      for(let len=Math.min(5,kata.length-i);len>=1;len--){
-        const kandidat=kata.slice(i,i+len).join(" ");
-        const sisaKata=kata.slice(i+len);
-        const menu=cariMenu(kandidat);
+    // Coba cari kombinasi nama menu dari posisi i
+    // yang diikuti angka sebagai qty
+    let found = null;
+    let consumed = 0;
+
+    // Coba berbagai panjang nama menu (5 kata s/d 1 kata)
+    for(let namaLen = Math.min(5, kataList.length - i); namaLen >= 1; namaLen--){
+      const namaKandidat = kataList.slice(i, i + namaLen).join(" ");
+      const posisiAngka = i + namaLen;
+      
+      // Cek apakah ada angka setelah nama
+      if(posisiAngka < kataList.length && isAngka(kataList[posisiAngka])){
+        const menu = cariMenu(namaKandidat);
         if(menu){
-          if(sisaKata.length>0&&isAngka(sisaKata[0])){
-            const qty=parseAngka(sisaKata[0])||1;
-            return{item:{id:menu.id,nama:menu.nama,qty:qty,harga:menu.harga,subtotal:qty*menu.harga},
-              before:kata.slice(0,i).join(" "),after:sisaKata.slice(1).join(" ")};
-          }
+          const qty = parseAngka(kataList[posisiAngka]) || 1;
+          found = {
+            id: menu.id,
+            nama: menu.nama,
+            qty: qty,
+            harga: menu.harga,
+            subtotal: qty * menu.harga
+          };
+          consumed = namaLen + 1; // nama + 1 angka
+          break;
         }
       }
     }
 
-    if(isAngka(kata[0])){
-      const qty=parseAngka(kata[0])||1;
-      for(let len=Math.min(5,kata.length-1);len>=1;len--){
-        const kandidat=kata.slice(1,1+len).join(" ");
-        const menu=cariMenu(kandidat);
+    // Kalau tidak ketemu dengan angka di kanan, coba tanpa angka (qty=1)
+    if(!found){
+      for(let namaLen = Math.min(5, kataList.length - i); namaLen >= 1; namaLen--){
+        const namaKandidat = kataList.slice(i, i + namaLen).join(" ");
+        const menu = cariMenu(namaKandidat);
         if(menu){
-          return{item:{id:menu.id,nama:menu.nama,qty:qty,harga:menu.harga,subtotal:qty*menu.harga},
-            before:"",after:kata.slice(1+len).join(" ")};
+          found = {
+            id: menu.id,
+            nama: menu.nama,
+            qty: 1,
+            harga: menu.harga,
+            subtotal: menu.harga
+          };
+          consumed = namaLen;
+          break;
         }
       }
     }
 
-    for(let i=0;i<kata.length;i++){
-      for(let len=Math.min(5,kata.length-i);len>=1;len--){
-        const kandidat=kata.slice(i,i+len).join(" ");
-        const menu=cariMenu(kandidat);
-        if(menu){
-          return{item:{id:menu.id,nama:menu.nama,qty:1,harga:menu.harga,subtotal:menu.harga},
-            before:kata.slice(0,i).join(" "),after:kata.slice(i+len).join(" ")};
-        }
-      }
-    }
-    return null;
-  }
-
-  let loopCount=0;
-  while(sisa.trim()&&loopCount<30){
-    loopCount++;
-    const found=cariSatuItem(sisa);
     if(found){
-      const leftover=(found.before+" "+found.after).replace(/\s+/g," ").trim();
-      hasil.push(found.item);
-      sisa=leftover;
-    }else{
-      const sisaTrim=sisa.trim();
-      if(sisaTrim&&!/^\d+$/.test(sisaTrim)){
-        hasil.push({id:null,nama:sisaTrim+" (?)",qty:1,harga:0,subtotal:0,error:true});
+      // Cek apakah item ini sudah ada di hasil (gabung qty)
+      const existing = hasil.findIndex(h => h.id === found.id && !h.error);
+      if(existing >= 0){
+        hasil[existing].qty += found.qty;
+        hasil[existing].subtotal = hasil[existing].qty * hasil[existing].harga;
+      } else {
+        hasil.push(found);
       }
-      break;
+      i += consumed;
+    } else {
+      // Kata tidak dikenali — kumpulkan sebagai error
+      // Gabungkan dengan kata berikutnya sampai ketemu angka atau nama menu
+      let kataError = kataList[i];
+      i++;
+      // Coba gabung dengan kata berikutnya kalau bukan angka
+      while(i < kataList.length && !isAngka(kataList[i])){
+        // Cek apakah kata+next sudah jadi nama menu
+        const coba = kataError + " " + kataList[i];
+        if(cariMenu(coba)) break;
+        // Cek apakah kata ini bisa jadi nama menu sendiri
+        if(cariMenu(kataList[i])) break;
+        kataError += " " + kataList[i];
+        i++;
+      }
+      // Skip angka kalau ada
+      let qtyError = 1;
+      if(i < kataList.length && isAngka(kataList[i])){
+        qtyError = parseAngka(kataList[i]) || 1;
+        i++;
+      }
+      hasil.push({
+        id: null,
+        nama: kataError + " (?)",
+        qty: qtyError,
+        harga: 0,
+        subtotal: 0,
+        error: true
+      });
     }
   }
 
