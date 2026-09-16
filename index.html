@@ -9,12 +9,10 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f0f4f8;color:#333;min-height:100vh}
 
-/* HALAMAN */
 .page{display:none;padding:16px;padding-bottom:100px;min-height:100vh;animation:fadeIn .3s}
 .page.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-/* LOGIN PAGE */
 #pageLogin{display:none;background:linear-gradient(160deg,#1a73e8,#0d47a1);flex-direction:column;justify-content:center;align-items:center;padding:24px;min-height:100vh}
 #pageLogin.active{display:flex}
 .login-logo{text-align:center;color:#fff;margin-bottom:40px}
@@ -27,19 +25,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .form-group input{width:100%;padding:14px;border:2px solid #e0e0e0;background:#fff;color:#333;border-radius:12px;font-size:16px;outline:none;transition:border-color .2s}
 .form-group input:focus{border-color:#1a73e8}
 
-/* BUTTONS */
 .btn-primary{width:100%;padding:16px;background:linear-gradient(135deg,#1a73e8,#0d47a1);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(26,115,232,.3)}
 .btn-primary:active{transform:scale(.97)}
 .btn-primary:disabled{opacity:.6}
 .btn-secondary{padding:12px;border:2px solid #e0e0e0;background:#fff;color:#333;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;flex:1}
+.btn-cetak{background:linear-gradient(135deg,#2e7d32,#1b5e20);color:#fff;border:none;padding:14px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;box-shadow:0 4px 12px rgba(46,125,50,.3)}
+.btn-cetak:active{transform:scale(.97)}
 
-/* HEADER */
 .app-header{background:linear-gradient(135deg,#1a73e8,#0d47a1);color:#fff;padding:20px;border-radius:16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 12px rgba(26,115,232,.3)}
 .app-header h1{font-size:20px}
 .app-header p{font-size:12px;opacity:.9;margin-top:4px}
 .user-badge{background:rgba(255,255,255,.2);padding:8px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,.3);color:#fff}
 
-/* CARDS */
 .card{background:#fff;padding:20px;border-radius:16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .card h2{font-size:15px;color:#1a73e8;margin-bottom:12px;display:flex;justify-content:space-between}
 .card .amount{font-size:28px;font-weight:700;color:#0d47a1;margin-bottom:12px}
@@ -47,13 +44,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .row-info:last-child{border-bottom:none}
 .row-info strong{color:#1a73e8}
 
-/* GRID MENU */
 .grid-menu{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:8px}
 .btn-menu{background:#fff;padding:20px 12px;border-radius:14px;text-align:center;cursor:pointer;border:none;box-shadow:0 2px 8px rgba(0,0,0,.06);font-size:13px;color:#333;font-weight:500}
 .btn-menu:active{transform:scale(.96);background:#f8f9fa}
 .btn-menu .icon{font-size:32px;display:block;margin-bottom:8px}
 
-/* GRID MEJA */
 .grid-meja{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
 .meja-card{padding:18px 8px;border-radius:12px;text-align:center;cursor:pointer;border:2px solid}
 .meja-card:active{transform:scale(.95)}
@@ -62,7 +57,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .meja-no{font-size:18px;font-weight:700}
 .meja-status{font-size:11px;margin-top:4px}
 
-/* VOICE */
 .voice-area{background:#fff;padding:24px 16px;border-radius:16px;text-align:center;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .voice-btn{background:linear-gradient(135deg,#1a73e8,#0d47a1);color:#fff;border:none;border-radius:50%;width:110px;height:110px;font-size:48px;cursor:pointer;box-shadow:0 6px 20px rgba(26,115,232,.4)}
 .voice-btn.listening{background:linear-gradient(135deg,#e53935,#c62828);animation:pulseVoice 1.2s infinite}
@@ -71,7 +65,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .transcript-box{background:#f8f9fa;padding:14px;border-radius:10px;margin-top:16px;min-height:50px;text-align:left;font-size:14px;font-style:italic;color:#555;border-left:4px solid #1a73e8}
 .hint-box{background:#fff3e0;padding:12px;border-radius:10px;font-size:12px;color:#e65100;margin-bottom:12px;line-height:1.5}
 
-/* ORDER ITEM */
 .order-item{display:flex;justify-content:space-between;align-items:center;padding:10px;background:#f8f9fa;border-radius:10px;margin-bottom:8px;gap:6px}
 .order-item.error{background:#ffebee;border-left:4px solid #e53935}
 .order-item .info{flex:1;min-width:0}
@@ -87,19 +80,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .btn-kurang-qty:active{transform:scale(.9);background:#e65100}
 .total-box{background:linear-gradient(135deg,#0d47a1,#1a73e8);color:#fff;padding:18px;border-radius:14px;text-align:center;margin-top:16px;font-size:20px;font-weight:700;box-shadow:0 4px 12px rgba(26,115,232,.3)}
 
-/* ORDER ACTIONS */
 .order-actions{display:flex;gap:8px;margin-top:12px}
 .btn-add-item{flex:1;background:#fff;color:#1a73e8;border:2px dashed #1a73e8;padding:14px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer}
 .btn-add-item:active{background:#e3f2fd}
 
-/* BOTTOM NAV */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;align-items:center;padding:8px 0;box-shadow:0 -4px 16px rgba(0,0,0,.08);z-index:100;border-top-left-radius:20px;border-top-right-radius:20px}
 .nav-item{flex:1;text-align:center;padding:8px 4px;cursor:pointer;color:#999;font-size:10px;background:none;border:none}
 .nav-item.active{color:#1a73e8}
 .nav-item .nav-icon{font-size:22px;display:block;margin-bottom:2px}
 .nav-center{position:relative;top:-20px;background:linear-gradient(135deg,#1a73e8,#0d47a1);width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;box-shadow:0 6px 16px rgba(26,115,232,.5);border:4px solid #fff;cursor:pointer}
 
-/* MODAL */
 .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.show{display:flex}
 .modal-box{background:#fff;border-radius:20px;padding:24px;max-width:400px;width:100%}
@@ -107,21 +97,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .modal-box p{color:#666;font-size:14px;line-height:1.5;margin-bottom:16px}
 .modal-actions{display:flex;gap:8px;margin-top:16px}
 
-/* LOADING */
 .loading{text-align:center;padding:30px;color:#888;font-size:14px}
 .spinner{display:inline-block;width:30px;height:30px;border:3px solid #e0e0e0;border-top-color:#1a73e8;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:8px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* TOAST */
 .toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(20px);background:#333;color:#fff;padding:12px 24px;border-radius:30px;font-size:14px;opacity:0;transition:all .3s;z-index:300;pointer-events:none;max-width:90%;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.success{background:#2e7d32}
 .toast.error{background:#c62828}
+
+/* STRUK PREVIEW */
+#strukPreview{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:400;overflow-y:auto;padding:20px}
+#strukPreview.show{display:block}
+.struk-content{font-family:'Courier New',monospace;font-size:12px;max-width:300px;margin:0 auto;white-space:pre-wrap;line-height:1.4}
+.struk-content h3{text-align:center;margin-bottom:8px}
+.struk-actions{position:fixed;bottom:0;left:0;right:0;background:#fff;padding:16px;border-top:1px solid #e0e0e0;display:flex;gap:8px}
 </style>
 </head>
 <body>
 
-<!-- HALAMAN 1: LOGIN -->
 <div class="page active" id="pageLogin">
 <div class="login-logo">
 <h1>🍛 Siang Malam</h1>
@@ -141,7 +135,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 </div>
 </div>
 
-<!-- HALAMAN 2: HOME -->
 <div class="page" id="pageHome">
 <div class="app-header">
 <div>
@@ -162,7 +155,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 </div>
 </div>
 
-<!-- HALAMAN 3: MEJA -->
 <div class="page" id="pageMeja">
 <div class="app-header">
 <div><h1>🪑 Pilih Meja</h1><p>Klik meja untuk mulai pesanan</p></div>
@@ -177,7 +169,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 </div>
 </div>
 
-<!-- HALAMAN 4: VOICE -->
 <div class="page" id="pageVoice">
 <div class="app-header">
 <div><h1>🎤 Voice Order</h1><p id="voiceHeaderInfo">Bicara pesanan Anda</p></div>
@@ -198,7 +189,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 <div id="hasilPesanan"></div>
 </div>
 
-<!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottomNav" style="display:none">
 <button class="nav-item" data-page="home" onclick="goTo('home')"><span class="nav-icon">🏠</span>Home</button>
 <button class="nav-item" data-page="meja" onclick="goTo('meja')"><span class="nav-icon">🪑</span>Meja</button>
@@ -207,7 +197,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 <button class="nav-item" onclick="logout()"><span class="nav-icon">👤</span>Logout</button>
 </div>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
 <div class="modal-box" onclick="event.stopPropagation()">
 <h2 id="modalTitle">Judul</h2>
@@ -216,21 +205,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 </div>
 </div>
 
+<!-- PREVIEW STRUK -->
+<div id="strukPreview">
+  <div class="struk-content" id="strukContent"></div>
+  <div class="struk-actions">
+    <button class="btn-secondary" onclick="closeStruk()">Tutup</button>
+    <button class="btn-cetak" style="margin-top:0" onclick="printStruk()">🖨️ Cetak Sekarang</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 // ====== KONFIGURASI API ======
 const API_URL = "https://pos-siang-malam-api.smartmultitechsolution.workers.dev";
 
-// State global
+// Info restoran untuk struk
+const RESTO_INFO = {
+  nama: "RUMAH MAKAN PADANG",
+  cabang: "SIANG MALAM",
+  alamat: "Jl. Raya Padang No. 123",
+  telp: "0751-123456",
+  footer: "Terima kasih, selamat makan!"
+};
+
 const state={
-  user:null,
-  menuDB:{},
-  mejaDB:[],
-  selectedMeja:null,
-  currentPage:"login",
-  orderItems:[],
-  orderMeja:null
+  user:null, menuDB:{}, mejaDB:[], selectedMeja:null,
+  currentPage:"login", orderItems:[], orderMeja:null
 };
 
 const rp=(n)=>"Rp "+Number(n).toLocaleString("id-ID");
@@ -281,13 +282,9 @@ async function apiCall(action,data={}){
   }
 }
 
-// ============ SESSION MANAGEMENT ============
 function saveSession(){
   if(state.user){
-    localStorage.setItem("pos_session", JSON.stringify({
-      user:state.user,
-      timestamp:Date.now()
-    }));
+    localStorage.setItem("pos_session", JSON.stringify({user:state.user,timestamp:Date.now()}));
   }
 }
 
@@ -296,22 +293,16 @@ function loadSession(){
     const session=localStorage.getItem("pos_session");
     if(!session) return null;
     const data=JSON.parse(session);
-    // Session berlaku 24 jam
     if(Date.now()-data.timestamp > 24*60*60*1000){
       localStorage.removeItem("pos_session");
       return null;
     }
     return data.user;
-  }catch(e){
-    return null;
-  }
+  }catch(e){return null;}
 }
 
-function clearSession(){
-  localStorage.removeItem("pos_session");
-}
+function clearSession(){localStorage.removeItem("pos_session");}
 
-// ============ LOGIN ============
 async function doLogin(){
   const username=document.getElementById("inputUsername").value.trim();
   const pin=document.getElementById("inputPin").value.trim();
@@ -343,12 +334,7 @@ function logout(){
 }
 
 function confirmLogout(){
-  state.user=null;
-  state.menuDB={};
-  state.mejaDB=[];
-  state.selectedMeja=null;
-  state.orderItems=[];
-  state.orderMeja=null;
+  state.user=null;state.menuDB={};state.mejaDB=[];state.selectedMeja=null;state.orderItems=[];state.orderMeja=null;
   clearSession();
   document.getElementById("bottomNav").style.display="none";
   document.getElementById("inputUsername").value="";
@@ -359,7 +345,6 @@ function confirmLogout(){
   toast("Anda telah logout");
 }
 
-// ============ LOAD DATA ============
 async function loadMenuDB(){
   const result=await apiCall("getMenu");
   if(result.success){
@@ -402,7 +387,6 @@ async function loadMeja(){
   grid.innerHTML=html;
 }
 
-// ============ PILIH MEJA ============
 function pilihMeja(noMeja,status){
   if(status==="Terisi"){
     showModal("Meja Terisi",
@@ -443,7 +427,6 @@ function updateVoiceHeader(){
   }
 }
 
-// ============ DAFTAR MENU ============
 function showDaftarMenu(){
   const menuArr=Object.values(state.menuDB);
   let html="";
@@ -454,7 +437,6 @@ function showDaftarMenu(){
   showModal("🍽️ Daftar Menu ("+menuArr.length+")",'<div style="max-height:60vh;overflow-y:auto">'+html+'</div>');
 }
 
-// ============ PESANAN AKTIF ============
 async function showPesananAktif(){
   showModal("📋 Pesanan Aktif",'<div class="loading"><div class="spinner"></div><br>Memuat...</div>');
   const result=await apiCall("pesananAktif");
@@ -570,7 +552,6 @@ function parseOrder(transcript){
   const teks=transcript.toLowerCase().trim();
   console.log("📝 Transcript:",teks);
 
-  // Deteksi meja (opsional)
   let noMeja=state.orderMeja;
   const mejaMatch=teks.match(/meja\s+(\w+)/i);
   if(mejaMatch){
@@ -578,18 +559,14 @@ function parseOrder(transcript){
     if(mejaNum)noMeja="M"+String(mejaNum).padStart(2,"0");
   }
 
-  // Hapus "meja X" dari teks
   let teksMenu=teks.replace(/meja\s+\w+/i,"").trim();
-  // Ganti kata sambung dengan spasi (bukan koma!)
   teksMenu=teksMenu.replace(/\s+(sama|terus|lalu|plus|dan)\s+/gi," ");
 
-  // Parse item — pakai SPASI sebagai pemisah, bukan koma
   const itemsBaru=parseItemsSmart(teksMenu);
 
   state.orderMeja=noMeja;
   state.selectedMeja=noMeja;
 
-  // Gabungkan dengan item yang sudah ada
   itemsBaru.forEach(newItem=>{
     const existing=state.orderItems.findIndex(i=>i.id===newItem.id&&!i.error&&!newItem.error);
     if(existing>=0){
@@ -603,10 +580,8 @@ function parseOrder(transcript){
   tampilkanHasil();
 }
 
-// Parser pintar tanpa koma — pakai spasi
 function parseItemsSmart(teksMenu){
   const hasil=[];
-  // Bersihkan: ganti koma & titik jadi spasi (jaga-jaga kalau user tetap ucapkan koma)
   let sisa=teksMenu.replace(/[,.]/g," ").replace(/\s+/g," ").trim();
 
   const isAngka=(kata)=>{
@@ -615,12 +590,10 @@ function parseItemsSmart(teksMenu){
     return /^\d+$/.test(kata);
   };
 
-  // Cari 1 item dari string, kembalikan {item, before, after}
   function cariSatuItem(str){
     const kata=str.split(/\s+/).filter(k=>k);
     if(kata.length===0)return null;
 
-    // Pola A: [nama_menu] [angka]
     for(let i=0;i<kata.length;i++){
       for(let len=Math.min(5,kata.length-i);len>=1;len--){
         const kandidat=kata.slice(i,i+len).join(" ");
@@ -629,50 +602,38 @@ function parseItemsSmart(teksMenu){
         if(menu){
           if(sisaKata.length>0&&isAngka(sisaKata[0])){
             const qty=parseAngka(sisaKata[0])||1;
-            return{
-              item:{id:menu.id,nama:menu.nama,qty:qty,harga:menu.harga,subtotal:qty*menu.harga},
-              before:kata.slice(0,i).join(" "),
-              after:sisaKata.slice(1).join(" ")
-            };
+            return{item:{id:menu.id,nama:menu.nama,qty:qty,harga:menu.harga,subtotal:qty*menu.harga},
+              before:kata.slice(0,i).join(" "),after:sisaKata.slice(1).join(" ")};
           }
         }
       }
     }
 
-    // Pola B: [angka] [nama_menu]
     if(isAngka(kata[0])){
       const qty=parseAngka(kata[0])||1;
       for(let len=Math.min(5,kata.length-1);len>=1;len--){
         const kandidat=kata.slice(1,1+len).join(" ");
         const menu=cariMenu(kandidat);
         if(menu){
-          return{
-            item:{id:menu.id,nama:menu.nama,qty:qty,harga:menu.harga,subtotal:qty*menu.harga},
-            before:"",
-            after:kata.slice(1+len).join(" ")
-          };
+          return{item:{id:menu.id,nama:menu.nama,qty:qty,harga:menu.harga,subtotal:qty*menu.harga},
+            before:"",after:kata.slice(1+len).join(" ")};
         }
       }
     }
 
-    // Pola C: [nama_menu] saja (qty=1)
     for(let i=0;i<kata.length;i++){
       for(let len=Math.min(5,kata.length-i);len>=1;len--){
         const kandidat=kata.slice(i,i+len).join(" ");
         const menu=cariMenu(kandidat);
         if(menu){
-          return{
-            item:{id:menu.id,nama:menu.nama,qty:1,harga:menu.harga,subtotal:menu.harga},
-            before:kata.slice(0,i).join(" "),
-            after:kata.slice(i+len).join(" ")
-          };
+          return{item:{id:menu.id,nama:menu.nama,qty:1,harga:menu.harga,subtotal:menu.harga},
+            before:kata.slice(0,i).join(" "),after:kata.slice(i+len).join(" ")};
         }
       }
     }
     return null;
   }
 
-  // Loop: cari item dari kiri, sisanya di-parse lagi
   let loopCount=0;
   while(sisa.trim()&&loopCount<30){
     loopCount++;
@@ -682,7 +643,6 @@ function parseItemsSmart(teksMenu){
       hasil.push(found.item);
       sisa=leftover;
     }else{
-      // Tidak ada menu lagi, sisa dianggap error kalau bukan angka
       const sisaTrim=sisa.trim();
       if(sisaTrim&&!/^\d+$/.test(sisaTrim)){
         hasil.push({id:null,nama:sisaTrim+" (?)",qty:1,harga:0,subtotal:0,error:true});
@@ -694,7 +654,6 @@ function parseItemsSmart(teksMenu){
   return hasil;
 }
 
-// ============ TAMPILKAN HASIL ============
 function tampilkanHasil(){
   const items=state.orderItems;
   const noMeja=state.orderMeja;
@@ -746,7 +705,6 @@ function tampilkanHasil(){
   document.getElementById("hasilPesanan").innerHTML=html;
 }
 
-// ============ EDIT ITEM ============
 function hapusItem(index){
   const item=state.orderItems[index];
   if(!item)return;
@@ -768,7 +726,6 @@ function kurangQty(index){
   const item=state.orderItems[index];
   if(!item)return;
   if(item.qty<=1){
-    // Konfirmasi hapus kalau qty jadi 0
     if(confirm("Qty "+item.nama+" jadi 0. Hapus item?")){
       state.orderItems.splice(index,1);
       tampilkanHasil();
@@ -781,7 +738,6 @@ function kurangQty(index){
   tampilkanHasil();
 }
 
-// ============ TAMBAH ITEM VIA VOICE ============
 function tambahItemVoice(){
   toast("🎤 Siap! Sebutkan item tambahan...");
   window.scrollTo({top:0,behavior:"smooth"});
@@ -790,7 +746,6 @@ function tambahItemVoice(){
   },500);
 }
 
-// ============ UBAH MODE ============
 function setTakeaway(){
   state.orderMeja=null;
   state.selectedMeja=null;
@@ -809,7 +764,6 @@ function setDineIn(){
   toast("Meja "+state.orderMeja+" dipilih","success");
 }
 
-// ============ KONFIRMASI & KIRIM ============
 async function konfirmasiOrder(){
   if(state.orderItems.length===0){toast("Tidak ada item","error");return;}
   await kirimPesanan(state.orderMeja,state.orderItems);
@@ -820,7 +774,6 @@ async function kirimPesanan(noMeja,items){
   if(validItems.length===0){toast("Tidak ada menu valid","error");return;}
 
   const targetMeja=noMeja||"TAKEAWAY";
-
   const btn=event.target;
   btn.textContent="⏳ Mengirim...";
   btn.disabled=true;
@@ -871,9 +824,13 @@ async function prosesBayar(idPesanan,metode,total){
     const strukResult=await apiCall("struk",{idPesanan});
     showModal("✅ Pembayaran Berhasil",
       '<p style="text-align:center;color:#2e7d32;font-size:16px;font-weight:700">'+metode+' - '+rp(total)+'</p>'+
-      '<div style="background:#f8f9fa;padding:12px;border-radius:10px;margin-top:12px;font-family:monospace;font-size:11px;white-space:pre-wrap;max-height:40vh;overflow-y:auto;color:#333;border:1px solid #e0e0e0">'+
-      (strukResult.struk||"Struk tidak tersedia")+'</div>',
-      '<button class="btn-secondary" onclick="closeModal();goTo(\'home\')">Selesai</button>');
+      '<p style="text-align:center;color:#888;font-size:13px;margin-top:8px">Struk sedang disiapkan...</p>',
+      '<button class="btn-secondary" onclick="closeModal();goTo(\'home\')">Selesai</button>'+
+      '<button class="btn-cetak" style="flex:1;margin-top:0" onclick="tampilkanStruk(\''+idPesanan+'\')">🖨️ Cetak Struk</button>');
+    
+    // Auto-simpan struk untuk dipakai nanti
+    window._lastStruk = strukResult.struk || "";
+    
     if(state.currentPage==="meja")loadMeja();
     if(state.currentPage==="home")loadLaporan();
   }else{
@@ -881,12 +838,165 @@ async function prosesBayar(idPesanan,metode,total){
   }
 }
 
+// ============ CETAK STRUK ============
+async function tampilkanStruk(idPesanan){
+  closeModal();
+  
+  // Ambil struk dari server
+  const result = await apiCall("struk", {idPesanan});
+  if(!result.success || !result.struk){
+    toast("❌ Struk tidak tersedia", "error");
+    return;
+  }
+  
+  // Format struk dengan header restoran
+  const strukFormatted = formatStrukFinal(result.struk);
+  document.getElementById("strukContent").innerHTML = strukFormatted;
+  document.getElementById("strukPreview").classList.add("show");
+  
+  // Simpan untuk print
+  window._currentStrukText = result.struk;
+}
+
+function formatStrukFinal(strukText){
+  // Escape HTML
+  const escaped = strukText.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  return escaped;
+}
+
+function closeStruk(){
+  document.getElementById("strukPreview").classList.remove("show");
+}
+
+function printStruk(){
+  const strukText = window._currentStrukText || "";
+  if(!strukText){
+    toast("❌ Tidak ada struk untuk dicetak", "error");
+    return;
+  }
+  
+  // Cek apakah user mau pakai printer thermal (RawBT) atau browser print
+  showModal("🖨️ Pilih Metode Cetak",
+    '<p>Pilih cara cetak struk:</p>'+
+    '<div style="background:#f8f9fa;padding:12px;border-radius:10px;margin:12px 0;font-size:12px;color:#666">'+
+    '<strong>A. Printer Thermal (RawBT)</strong><br>'+
+    'Butuh app RawBT + printer Bluetooth<br><br>'+
+    '<strong>B. Print Browser</strong><br>'+
+    'Print ke printer biasa atau PDF<br>Bisa di-screenshot juga'+
+    '</div>',
+    '<button class="btn-secondary" onclick="closeModal();printViaBrowser()">🌐 Browser</button>'+
+    '<button class="btn-primary" style="flex:1" onclick="closeModal();printViaRawBT()">🖨️ Thermal</button>'
+  );
+}
+
+function printViaBrowser(){
+  const strukText = window._currentStrukText || "";
+  
+  // Buka window baru dengan struk
+  const printWindow = window.open("", "_blank", "width=400,height=600");
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Struk Siang Malam</title>
+      <style>
+        @media print {
+          @page { margin: 5mm; size: 80mm auto; }
+          body { margin: 0; }
+        }
+        body { 
+          font-family: 'Courier New', monospace; 
+          font-size: 12px; 
+          white-space: pre-wrap; 
+          padding: 10px;
+          line-height: 1.4;
+        }
+      </style>
+    </head>
+    <body>${strukText.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}</body>
+    </html>
+  `);
+  printWindow.document.close();
+  
+  setTimeout(()=>{
+    printWindow.focus();
+    printWindow.print();
+  }, 500);
+}
+
+function printViaRawBT(){
+  const strukText = window._currentStrukText || "";
+  if(!strukText){
+    toast("❌ Tidak ada struk", "error");
+    return;
+  }
+  
+  // RawBT menggunakan URL scheme rawbt:
+  // Format: rawbt:<text>
+  const encoded = encodeURIComponent(strukText);
+  const rawbtUrl = "rawbt:" + encoded;
+  
+  // Cek apakah RawBT terinstall (via user agent / coba buka)
+  toast("Membuka RawBT...", "");
+  
+  // Buka RawBT
+  window.location.href = rawbtUrl;
+  
+  // Fallback kalau RawBT tidak ada (after 2 detik, tawarkan browser print)
+  setTimeout(()=>{
+    showModal("🖨️ RawBT Tidak Terdeteksi",
+      '<p>App <strong>RawBT</strong> tidak terinstall di HP Anda.</p>'+
+      '<p style="font-size:13px;color:#666">RawBT adalah app gratis untuk print ke printer thermal Bluetooth.</p>'+
+      '<div style="background:#e3f2fd;padding:10px;border-radius:8px;margin:12px 0;font-size:12px">'+
+      '<strong>Cara Install RawBT:</strong><br>'+
+      '1. Buka Play Store<br>'+
+      '2. Cari "RawBT"<br>'+
+      '3. Install (gratis)<br>'+
+      '4. Hubungkan printer Bluetooth<br>'+
+      '5. Coba cetak lagi'+
+      '</div>',
+      '<button class="btn-secondary" onclick="closeModal()">Nanti</button>'+
+      '<button class="btn-primary" style="flex:1" onclick="closeModal();printViaBrowser()">🌐 Browser</button>'
+    );
+  }, 2000);
+}
+
+// Test print dummy
+function testPrint(){
+  window._currentStrukText = 
+`================================
+      RUMAH MAKAN PADANG
+         SIANG MALAM
+   Jl. Raya Padang No. 123
+     Telp: 0751-123456
+================================
+No  : TRX-TEST-001
+Meja: TEST
+Kasir: Administrator
+Waktu: ${new Date().toLocaleString("id-ID")}
+--------------------------------
+Nasi Putih
+  2 x Rp 5.000 = Rp 10.000
+Rendang Daging
+  1 x Rp 25.000 = Rp 25.000
+================================
+TOTAL: Rp 35.000
+Bayar: Tunai
+================================
+  Terima kasih, selamat makan!
+     Salam Siang Malam
+================================`;
+  
+  formatStrukFinal(window._currentStrukText);
+  document.getElementById("strukContent").innerHTML = formatStrukFinal(window._currentStrukText);
+  document.getElementById("strukPreview").classList.add("show");
+}
+
 // ============ INIT ============
 document.addEventListener("keypress",(e)=>{
   if(e.key==="Enter"&&state.currentPage==="login")doLogin();
 });
 
-// Auto-login kalau ada session tersimpan
 window.addEventListener("DOMContentLoaded",()=>{
   const savedUser=loadSession();
   if(savedUser){
@@ -895,7 +1005,7 @@ window.addEventListener("DOMContentLoaded",()=>{
   }
 });
 
-console.log("🍛 POS Siang Malam loaded (v2 - with session persist)!");
+console.log("🍛 POS Siang Malam loaded (v3 - with print struk)!");
 </script>
 </body>
 </html>
