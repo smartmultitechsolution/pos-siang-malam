@@ -87,6 +87,34 @@
 </div>
 <div id="hasilPesanan"></div>
 </div>
+<!-- HALAMAN: KELOLA MENU -->
+<div class="page" id="pageKelolaMenu">
+<div class="app-header">
+<div><h1>⚙️ Kelola Menu</h1><p id="kelolaMenuInfo">Kelola daftar menu</p></div>
+<button class="user-badge" onclick="goTo('home')">← Kembali</button>
+</div>
+
+<!-- Filter kategori -->
+<div class="filter-tabs" id="filterKategori">
+<button class="filter-tab active" data-kat="all" onclick="filterMenuKategori('all', this)">Semua</button>
+<button class="filter-tab" data-kat="Makanan" onclick="filterMenuKategori('Makanan', this)">Makanan</button>
+<button class="filter-tab" data-kat="Minuman" onclick="filterMenuKategori('Minuman', this)">Minuman</button>
+<button class="filter-tab" data-kat="Sayuran" onclick="filterMenuKategori('Sayuran', this)">Sayuran</button>
+<button class="filter-tab" data-kat="Pelengkap" onclick="filterMenuKategori('Pelengkap', this)">Pelengkap</button>
+</div>
+
+<div class="card">
+<div class="form-group" style="margin-bottom:12px">
+<input type="text" id="searchMenu" placeholder="🔍 Cari menu..." oninput="renderDaftarMenuKelola()">
+</div>
+
+<div id="daftarMenuKelola" style="max-height:60vh;overflow-y:auto">
+<div class="loading">Memuat...</div>
+</div>
+
+<button class="btn-primary" onclick="showFormTambahMenu()" style="margin-top:12px">➕ Tambah Menu Baru</button>
+</div>
+</div>
 
 <!-- HALAMAN 5: LAPORAN -->
 <div class="page" id="pageLaporan">
