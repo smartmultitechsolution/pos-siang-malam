@@ -182,3 +182,169 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 .struk-content{font-family:'Courier New',monospace;font-size:12px;max-width:300px;margin:0 auto;white-space:pre-wrap;line-height:1.4}
 .struk-content h3{text-align:center;margin-bottom:8px}
 .struk-actions{position:fixed;bottom:0;left:0;right:0;background:#fff;padding:16px;border-top:1px solid #e0e0e0;display:flex;gap:8px}
+
+/* KELOLA MENU */
+.menu-card {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: #fff;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.06);
+  align-items: center;
+}
+
+.menu-foto {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #f0f0f0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #ccc;
+}
+
+.menu-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.menu-info h4 {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-info small {
+  color: #888;
+  font-size: 11px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.menu-info .harga {
+  color: #1a73e8;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.menu-info .status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.menu-info .status.tersedia {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.menu-info .status.habis {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.menu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.menu-actions button {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #fff;
+  padding: 0;
+}
+
+.menu-actions .edit { background: #1a73e8; }
+.menu-actions .hapus { background: #e53935; }
+.menu-actions .toggle { background: #f57c00; }
+.menu-actions .toggle.aktif { background: #2e7d32; }
+
+/* FORM MODAL MENU */
+.form-modal input,
+.form-modal select,
+.form-modal textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+}
+
+.form-modal input:focus,
+.form-modal select:focus,
+.form-modal textarea:focus {
+  border-color: #1a73e8;
+}
+
+.form-modal label {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.form-modal .form-row {
+  margin-bottom: 12px;
+}
+
+.foto-preview {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 8px;
+  display: none;
+}
+
+.foto-preview.show { display: block; }
+
+.upload-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 2px dashed #1a73e8;
+  border-radius: 10px;
+  background: #f0f7ff;
+  color: #1a73e8;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.upload-btn:active { background: #e3f2fd; }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+}
+
+.empty-state .icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.5;
+}
