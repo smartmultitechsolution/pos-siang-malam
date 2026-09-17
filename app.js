@@ -62,7 +62,8 @@ function goTo(page){
   if(page==="home")loadLaporanDashboard();
   if(page==="meja")loadMeja();
   if(page==="voice")updateVoiceHeader();
-  if(page==="laporan"){
+  if(page==="laporan");
+  if(page==="kelolaMenu"){
     const btn = document.querySelector('.filter-tab[data-range="today"]');
     if(btn) setFilter("today", btn);
   }
@@ -132,6 +133,15 @@ function applyLoginUI(){
   document.getElementById("bottomNav").style.display="flex";
   document.getElementById("pageLogin").classList.remove("active");
   loadMenuDB();
+  // Sembunyikan tombol Kelola Menu untuk pelayan
+const kelolaBtn = document.querySelector('button[onclick="openKelolaMenu()"]');
+if(kelolaBtn){
+  if(state.user.role === "Owner" || state.user.role === "Kasir"){
+    kelolaBtn.style.display = "block";
+  }else{
+    kelolaBtn.style.display = "none";
+  }
+}
   goTo("home");
 }
 
