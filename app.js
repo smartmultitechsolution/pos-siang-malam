@@ -1100,5 +1100,288 @@ window.addEventListener("DOMContentLoaded",()=>{
 
 
 
+// ============================================
+// KELOLA MENU (CRUD)
+// ============================================
+let kelolaMenuData = [];
+let filterKategoriAktif = "all";
+let currentMenuEditId = null;
+
+function openKelolaMenu(){
+  if(state.user.role !== "Owner" && state.user.role !== "Kasir"){
+    toast("Hanya Owner & Kasir yang bisa kelola menu", "error");
+    return;
+  }
+  goTo("kelolaMenu");
+  loadKelolaMenu();
+}
+
+async function loadKelolaMenu(){
+  const container = document.getElementById("daftarMenuKelola");
+  if(!container) return;
+  container.innerHTML = '<div class="loading"><div class="spinner"></div><br>Memuat menu...</div>';
+  const result = await apiCall("getMenu");
+  if(!result.success){
+    container.innerHTML = '<div class="empty-state"><span class="icon">❌</span>Gagal memuat menu</div>';
+    return;
+  }
+  kelolaMenuData = result.data;
+  renderDaftarMenuKelola();
+}
+
+function filterMenuKategori(kat, btn){
+  document.querySelectorAll("#filterKategori .filter-tab").forEach(b => b.classList.remove("active"));
+  if(btn) btn.classList.add("active");
+  filterKategoriAktif = kat;
+  renderDaftarMenuKelola();
+}
+
+function renderDaftarMenuKelola(){
+  const container = document.getElementById("daftarMenuKelola");
+  if(!container) return;
+  const search = (document.getElementById("searchMenu").value || "").toLowerCase().trim();
+  let filtered = kelolaMenuData;
+  if(filterKategoriAktif !== "all"){
+    filtered = filtered.filter(m => m.kategori === filterKategoriAktif);
+  }
+  if(search){
+    filtered = filtered.filter(m => 
+      m.nama.toLowerCase().includes(search) || 
+      (m.id || "").toLowerCase().includes(search)
+    );
+  }
+  if(filtered.length === 0){
+    container.innerHTML = '<div class="empty-state"><span class="icon">🍽️</span>Tidak ada menu</div>';
+    return;
+  }
+  let html = "";
+  filtered.forEach(m => {
+    const statusClass = m.status === "Tersedia" ? "tersedia" : "habis";
+    const fotoHtml = m.foto 
+      ? '<img src="' + m.foto + '" class="menu-foto" onerror="this.outerHTML=\'<div class=&quot;menu-foto&quot;>🍽️</div>\'">'
+      : '<div class="menu-foto">🍽️</div>';
+    html += '<div class="menu-card">' + fotoHtml +
+      '<div class="menu-info">' +
+        '<h4>' + m.nama + '</h4>' +
+        '<small>' + m.id + ' • ' + m.kategori + '</small>' +
+        '<span class="harga">' + rp(m.harga) + '</span>' +
+        '<span class="status ' + statusClass + '">' + m.status + '</span>' +
+      '</div>' +
+      '<div class="menu-actions">' +
+        '<button class="edit" onclick="showFormEditMenu(\'' + m.id + '\')" title="Edit">✏️</button>' +
+        '<button class="toggle ' + (m.status === 'Tersedia' ? 'aktif' : '') + '" onclick="toggleStatusMenu(\'' + m.id + '\')" title="Toggle Status">🔄</button>' +
+        '<button class="hapus" onclick="konfirmasiHapusMenu(\'' + m.id + '\')" title="Hapus">🗑️</button>' +
+      '</div>' +
+    '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function showFormTambahMenu(){
+  currentMenuEditId = null;
+  const maxId = kelolaMenuData.reduce((max, m) => {
+    const num = parseInt((m.id || "").replace(/\D/g, "")) || 0;
+    return Math.max(max, num);
+  }, 0);
+  const newId = "M" + String(maxId + 1).padStart(3, "0");
+  const body = 
+    '<div class="form-modal">' +
+      '<div class="form-row"><label>ID Menu</label>' +
+      '<input type="text" id="formMenuId" value="' + newId + '" readonly style="background:#f5f5f5;color:#666"></div>' +
+      '<div class="form-row"><label>Nama Menu *</label>' +
+      '<input type="text" id="formMenuNama" placeholder="contoh: Rendang Daging"></div>' +
+      '<div class="form-row"><label>Kategori *</label>' +
+      '<select id="formMenuKategori">' +
+        '<option value="Makanan">Makanan</option>' +
+        '<option value="Minuman">Minuman</option>' +
+        '<option value="Sayuran">Sayuran</option>' +
+        '<option value="Pelengkap">Pelengkap</option>' +
+        '<option value="Lainnya">Lainnya</option>' +
+      '</select></div>' +
+      '<div class="form-row"><label>Harga (Rp) *</label>' +
+      '<input type="number" id="formMenuHarga" placeholder="contoh: 25000" inputmode="numeric"></div>' +
+      '<div class="form-row"><label>Status</label>' +
+      '<select id="formMenuStatus">' +
+        '<option value="Tersedia">Tersedia</option>' +
+        '<option value="Habis">Habis</option>' +
+      '</select></div>' +
+      '<div class="form-row"><label>Foto Menu (opsional)</label>' +
+      '<input type="file" id="formMenuFoto" accept="image/*" style="display:none" onchange="handleUploadFoto(this, \'formMenuFotoPreview\', \'formMenuFotoUrl\')">' +
+      '<button type="button" class="upload-btn" onclick="document.getElementById(\'formMenuFoto\').click()">📸 Pilih Foto</button>' +
+      '<input type="hidden" id="formMenuFotoUrl" value="">' +
+      '<img id="formMenuFotoPreview" class="foto-preview"></div>' +
+    '</div>';
+  showModal("➕ Tambah Menu Baru", body,
+    '<button class="btn-secondary" onclick="closeModal()">Batal</button>' +
+    '<button class="btn-primary" style="flex:1" onclick="simpanMenuBaru()">💾 Simpan</button>'
+  );
+}
+
+function showFormEditMenu(id){
+  const menu = kelolaMenuData.find(m => m.id === id);
+  if(!menu){ toast("Menu tidak ditemukan", "error"); return; }
+  currentMenuEditId = id;
+  const body = 
+    '<div class="form-modal">' +
+      '<div class="form-row"><label>ID Menu</label>' +
+      '<input type="text" value="' + menu.id + '" readonly style="background:#f5f5f5;color:#666"></div>' +
+      '<div class="form-row"><label>Nama Menu *</label>' +
+      '<input type="text" id="formMenuNama" value="' + menu.nama + '"></div>' +
+      '<div class="form-row"><label>Kategori *</label>' +
+      '<select id="formMenuKategori">' +
+        ["Makanan","Minuman","Sayuran","Pelengkap","Lainnya"].map(k => 
+          '<option value="' + k + '"' + (menu.kategori === k ? ' selected' : '') + '>' + k + '</option>'
+        ).join("") +
+      '</select></div>' +
+      '<div class="form-row"><label>Harga (Rp) *</label>' +
+      '<input type="number" id="formMenuHarga" value="' + menu.harga + '" inputmode="numeric"></div>' +
+      '<div class="form-row"><label>Status</label>' +
+      '<select id="formMenuStatus">' +
+        '<option value="Tersedia"' + (menu.status === "Tersedia" ? ' selected' : '') + '>Tersedia</option>' +
+        '<option value="Habis"' + (menu.status === "Habis" ? ' selected' : '') + '>Habis</option>' +
+      '</select></div>' +
+      '<div class="form-row"><label>Foto Menu (opsional)</label>' +
+      '<input type="file" id="formMenuFoto" accept="image/*" style="display:none" onchange="handleUploadFoto(this, \'formMenuFotoPreview\', \'formMenuFotoUrl\')">' +
+      '<button type="button" class="upload-btn" onclick="document.getElementById(\'formMenuFoto\').click()">📸 Ganti Foto</button>' +
+      '<input type="hidden" id="formMenuFotoUrl" value="' + (menu.foto || '') + '">' +
+      '<img id="formMenuFotoPreview" class="foto-preview' + (menu.foto ? ' show' : '') + '" src="' + (menu.foto || '') + '"></div>' +
+    '</div>';
+  showModal("✏️ Edit Menu: " + menu.nama, body,
+    '<button class="btn-secondary" onclick="closeModal()">Batal</button>' +
+    '<button class="btn-primary" style="flex:1" onclick="simpanEditMenu()">💾 Simpan</button>'
+  );
+}
+
+async function handleUploadFoto(input, previewId, urlId){
+  const file = input.files[0];
+  if(!file){ return; }
+  if(file.size > 2 * 1024 * 1024){
+    toast("Foto terlalu besar (max 2MB)", "error");
+    input.value = "";
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const preview = document.getElementById(previewId);
+    if(preview){
+      preview.src = e.target.result;
+      preview.classList.add("show");
+    }
+  };
+  reader.readAsDataURL(file);
+  toast("📤 Mengupload foto...");
+  const base64 = await new Promise((resolve) => {
+    const r = new FileReader();
+    r.onload = (e) => resolve(e.target.result);
+    r.readAsDataURL(file);
+  });
+  const result = await apiCall("uploadFoto", {
+    base64: base64,
+    filename: file.name
+  });
+  if(result.success){
+    document.getElementById(urlId).value = result.url;
+    toast("✅ Foto berhasil diupload", "success");
+  }else{
+    toast("❌ Upload gagal: " + result.message, "error");
+    document.getElementById(previewId).classList.remove("show");
+  }
+}
+
+async function simpanMenuBaru(){
+  const id = document.getElementById("formMenuId").value.trim();
+  const nama = document.getElementById("formMenuNama").value.trim();
+  const kategori = document.getElementById("formMenuKategori").value;
+  const harga = parseInt(document.getElementById("formMenuHarga").value) || 0;
+  const status = document.getElementById("formMenuStatus").value;
+  const foto = document.getElementById("formMenuFotoUrl").value;
+  if(!nama || !harga){
+    toast("Nama dan harga harus diisi", "error");
+    return;
+  }
+  const btn = event.target;
+  btn.disabled = true; btn.textContent = "⏳ Menyimpan...";
+  const result = await apiCall("tambahMenu", {
+    menu: { id, nama, kategori, harga, status, foto }
+  });
+  btn.disabled = false; btn.textContent = "💾 Simpan";
+  if(result.success){
+    toast("✅ Menu berhasil ditambahkan", "success");
+    closeModal();
+    loadKelolaMenu();
+    loadMenuDB();
+  }else{
+    toast("❌ " + result.message, "error");
+  }
+}
+
+async function simpanEditMenu(){
+  const nama = document.getElementById("formMenuNama").value.trim();
+  const kategori = document.getElementById("formMenuKategori").value;
+  const harga = parseInt(document.getElementById("formMenuHarga").value) || 0;
+  const status = document.getElementById("formMenuStatus").value;
+  const foto = document.getElementById("formMenuFotoUrl").value;
+  if(!nama || !harga){
+    toast("Nama dan harga harus diisi", "error");
+    return;
+  }
+  const btn = event.target;
+  btn.disabled = true; btn.textContent = "⏳ Menyimpan...";
+  const result = await apiCall("editMenu", {
+    id: currentMenuEditId,
+    menu: { nama, kategori, harga, status, foto }
+  });
+  btn.disabled = false; btn.textContent = "💾 Simpan";
+  if(result.success){
+    toast("✅ Menu berhasil diupdate", "success");
+    closeModal();
+    loadKelolaMenu();
+    loadMenuDB();
+  }else{
+    toast("❌ " + result.message, "error");
+  }
+}
+
+async function toggleStatusMenu(id){
+  const menu = kelolaMenuData.find(m => m.id === id);
+  if(!menu) return;
+  const newStatus = menu.status === "Tersedia" ? "Habis" : "Tersedia";
+  const result = await apiCall("editMenu", {
+    id: id,
+    menu: { status: newStatus }
+  });
+  if(result.success){
+    toast("✅ Status: " + newStatus, "success");
+    loadKelolaMenu();
+    loadMenuDB();
+  }else{
+    toast("❌ " + result.message, "error");
+  }
+}
+
+function konfirmasiHapusMenu(id){
+  const menu = kelolaMenuData.find(m => m.id === id);
+  if(!menu) return;
+  showModal("⚠️ Hapus Menu", 
+    'Yakin ingin menghapus <strong>' + menu.nama + '</strong>?<br><br>' +
+    '<span style="color:#c62828;font-size:13px">Tindakan ini tidak bisa dibatalkan.</span>',
+    '<button class="btn-secondary" onclick="closeModal()">Batal</button>' +
+    '<button class="btn-primary" style="flex:1;background:linear-gradient(135deg,#e53935,#c62828)" onclick="hapusMenuConfirm(\'' + id + '\')">🗑️ Hapus</button>'
+  );
+}
+
+async function hapusMenuConfirm(id){
+  closeModal();
+  toast("Menghapus...");
+  const result = await apiCall("hapusMenu", { id });
+  if(result.success){
+    toast("✅ Menu dihapus", "success");
+    loadKelolaMenu();
+    loadMenuDB();
+  }else{
+    toast("❌ " + result.message, "error");
+  }
+}
+
 
 console.log("🍛 POS Siang Malam loaded (v4 - modular)!");
